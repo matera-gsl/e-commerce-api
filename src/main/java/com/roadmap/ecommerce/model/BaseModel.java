@@ -1,6 +1,6 @@
 package com.roadmap.ecommerce.model;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -29,9 +29,9 @@ public abstract class BaseModel {
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 }

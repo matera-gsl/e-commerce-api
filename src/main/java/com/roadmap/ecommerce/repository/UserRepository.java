@@ -8,4 +8,5 @@ import com.roadmap.ecommerce.model.User;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
+    boolean existsByUsername(String username);
 }

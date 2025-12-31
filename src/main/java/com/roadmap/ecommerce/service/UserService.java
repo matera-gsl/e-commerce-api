@@ -40,7 +40,12 @@ public class UserService {
 
     public User findById(UUID id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User", id));
+                .orElseThrow(() -> new EntityNotFoundException("User", "ID", id));
+    }
+
+    public User findByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User", "username", username));
     }
 
     @Transactional

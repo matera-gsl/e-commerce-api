@@ -2,6 +2,9 @@ package com.roadmap.ecommerce.controller;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.roadmap.ecommerce.assembler.UserAssembler;
 import com.roadmap.ecommerce.dto.user.UserRequestDTO;
 import com.roadmap.ecommerce.dto.user.UserResponseDTO;
+import com.roadmap.ecommerce.model.User;
 import com.roadmap.ecommerce.service.UserService;
 
 import jakarta.validation.Valid;
@@ -23,6 +27,7 @@ public class UserController {
 
     private final UserAssembler assembler;
     private final UserService service;
+    private final PagedResourcesAssembler<User> pagedResourcesAssembler;
 
     @PostMapping
     public ResponseEntity<EntityModel<UserResponseDTO>> create(@RequestBody @Valid UserRequestDTO data) {
@@ -30,8 +35,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<UserResponseDTO>>> findAll() {
-        return ResponseEntity.ok(assembler.toCollectionModel(service.findAll()));
+    public ResponseEntity<CollectionModel<EntityModel<UserResponseDTO>>> findAll(Pageable pageable) {
+        Page<User> usersPage = service.findAll(pageable);
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(usersPage, assembler));
     }
 
     @GetMapping("/{id}")

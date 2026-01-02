@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import org.springframework.data.domain.Pageable;
+
 @Component
 public class UserAssembler implements RepresentationModelAssembler<User, EntityModel<UserResponseDTO>> {
 
@@ -23,6 +25,6 @@ public class UserAssembler implements RepresentationModelAssembler<User, EntityM
 
         return EntityModel.of(dto,
                 linkTo(methodOn(UserController.class).findById(user.getId())).withSelfRel(),
-                linkTo(methodOn(UserController.class).findAll()).withRel("users"));
+                linkTo(methodOn(UserController.class).findAll(Pageable.unpaged())).withRel("users"));
     }
 }

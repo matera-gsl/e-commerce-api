@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import org.springframework.data.domain.Pageable;
+
 @Component
 @RequiredArgsConstructor
 public class ProductAssembler implements RepresentationModelAssembler<Product, EntityModel<ProductResponseDTO>> {
@@ -23,6 +25,6 @@ public class ProductAssembler implements RepresentationModelAssembler<Product, E
 
         return EntityModel.of(dto,
                 linkTo(methodOn(ProductController.class).findById(product.getId())).withSelfRel(),
-                linkTo(methodOn(ProductController.class).findAll()).withRel("all-products"));
+                linkTo(methodOn(ProductController.class).findAll(Pageable.unpaged())).withRel("all-products"));
     }
 }

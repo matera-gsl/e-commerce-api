@@ -2,6 +2,9 @@ package com.roadmap.ecommerce.controller;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.roadmap.ecommerce.assembler.ProductAssembler;
 import com.roadmap.ecommerce.dto.product.ProductRequestDTO;
 import com.roadmap.ecommerce.dto.product.ProductResponseDTO;
+import com.roadmap.ecommerce.model.Product;
 import com.roadmap.ecommerce.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -30,6 +34,7 @@ public class ProductController {
 
     private final ProductService service;
     private final ProductAssembler assembler;
+    private final PagedResourcesAssembler<Product> pagedResourcesAssembler;
 
     @PostMapping
     public ResponseEntity<EntityModel<ProductResponseDTO>> create(@RequestBody ProductRequestDTO data) {
@@ -37,8 +42,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<ProductResponseDTO>>> findAll() {
-        return ResponseEntity.ok(assembler.toCollectionModel(service.findAll()));
+    public ResponseEntity<CollectionModel<EntityModel<ProductResponseDTO>>> findAll(Pageable pageable) {
+        Page<Product> productsPage = service.findAll(pageable);
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(productsPage, assembler));
     }
 
     @GetMapping("/{id}")

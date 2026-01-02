@@ -15,23 +15,25 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequiredArgsConstructor
 public class CartAssembler implements RepresentationModelAssembler<ShoppingCart, EntityModel<CartResponseDTO>> {
 
-    private final ShoppingCartMapper cartMapper;
-    private final CartItemAssembler cartItemAssembler;
+        private final ShoppingCartMapper cartMapper;
+        private final CartItemAssembler cartItemAssembler;
 
-    @Override
-    public EntityModel<CartResponseDTO> toModel(ShoppingCart entity) {
-        var itemsWithLinks = entity.getItems().stream()
-                .map(cartItemAssembler::toModel)
-                .toList();
+        @Override
+        public EntityModel<CartResponseDTO> toModel(ShoppingCart entity) {
+                CartResponseDTO dto = cartMapper.toResponse(entity);
 
-        CartResponseDTO dto = new CartResponseDTO(
-                entity.getId(),
-                itemsWithLinks,
-                cartMapper.fromCents(entity.getTotal()),
-                entity.getUpdatedAt());
+                var itemsWithLinks = entity.getItems().stream()
+                                .map(cartItemAssembler::toModel)
+                                .toList();
 
-        return EntityModel.of(dto,
-                linkTo(methodOn(CartController.class).findUserCart()).withSelfRel(),
-                linkTo(methodOn(CartController.class).clearCart()).withRel("clear"));
-    }
+                CartResponseDTO finalDto = new CartResponseDTO(
+                                dto.id(),
+                                itemsWithLinks,
+                                dto.total(),
+                                entity.getUpdatedAt());
+
+                return EntityModel.of(finalDto,
+                                linkTo(methodOn(CartController.class).findUserCart()).withSelfRel(),
+                                linkTo(methodOn(CartController.class).clearCart()).withRel("clear"));
+        }
 }

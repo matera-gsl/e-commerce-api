@@ -12,6 +12,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ShoppingCartMapper {
 
+    @Mapping(target = "items", ignore = true)
     @Mapping(target = "total", source = "total", qualifiedByName = "fromCents")
     CartResponseDTO toResponse(ShoppingCart entity);
 

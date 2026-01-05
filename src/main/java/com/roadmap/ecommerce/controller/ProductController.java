@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.roadmap.ecommerce.assembler.ProductAssembler;
+import com.roadmap.ecommerce.dto.product.ProductFilterDTO;
 import com.roadmap.ecommerce.dto.product.ProductRequestDTO;
 import com.roadmap.ecommerce.dto.product.ProductResponseDTO;
 import com.roadmap.ecommerce.model.Product;
@@ -42,8 +43,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<ProductResponseDTO>>> findAll(Pageable pageable) {
-        Page<Product> productsPage = service.findAll(pageable);
+    public ResponseEntity<CollectionModel<EntityModel<ProductResponseDTO>>> findAll(Pageable pageable,
+            ProductFilterDTO filter) {
+        Page<Product> productsPage = service.findAll(pageable, filter);
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(productsPage, assembler));
     }
 
